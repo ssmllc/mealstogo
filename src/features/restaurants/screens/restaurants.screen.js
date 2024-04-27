@@ -1,19 +1,15 @@
-import React, { useState, useContext } from "react";
-import { Searchbar } from "react-native-paper";
-import { StatusBar, FlatList, SafeAreaView, View } from "react-native";
+import React, { useContext } from "react";
+import { FlatList } from "react-native";
 import styled from "styled-components/native";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import { RestaurantInfoCard } from "../components/restaurant.info.card.component";
-import { Spacer } from "../../components/spacer/spacer.component";
-import { RestaurantsContext } from "../../../services/restaurants.context";
-const SafeArea = styled(SafeAreaView)`
-  flex: 1;
-  ${StatusBar.currentHeight && `margin-top: ${StatusBar.currentHeight}px;`};
-`;
+import { ActivityIndicator } from "react-native-paper";
 
-const SearchContainer = styled.View`
-  padding: ${(props) => props.theme.space[3]};
-`;
+import { SafeArea } from "../../components/utility/safe-area.component";
+import { Spacer } from "../../components/spacer/spacer.component";
+
+import { RestaurantsContext } from "../../../services/restaurants/restaurants.context";
+
+import { Search } from "../components/search.component";
+import { RestaurantInfoCard } from "../components/restaurant.info.card.component";
 
 const RestaurantList = styled(FlatList).attrs({
   contentContainerStyle: {
@@ -24,31 +20,22 @@ const RestaurantList = styled(FlatList).attrs({
 const Loading = styled(ActivityIndicator)`
   margin-left: -25px;
 `;
-
-const LoadingContainer = styled(View)`
+const LoadingContainer = styled.View`
   position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
 `;
 
 export const RestaurantsScreen = () => {
-  const { isLoading, error, restaurants } = useContext(RestaurantsContext);
-
-  const [searchQuery, setSearchQuery] = useState("");
+  const { isLoading, restaurants } = useContext(RestaurantsContext);
   return (
     <SafeArea>
       {isLoading && (
         <LoadingContainer>
-          <Loading size={50} animating={true} color={MD2Colors.red800} />
+          <Loading size={50} animating={true} color={"red"} />
         </LoadingContainer>
       )}
-      <SearchContainer>
-        <Searchbar
-          placeholder="Search"
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-        />
-      </SearchContainer>
+      <Search />
       <RestaurantList
         data={restaurants}
         renderItem={({ item }) => {
